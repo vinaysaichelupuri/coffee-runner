@@ -1,56 +1,115 @@
-# Welcome to your Expo app 👋
+# ☕️ Coffee Runner
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Coffee Runner is a fast-paced, lane-based endless runner game built with React Native and Expo. Players control a runner dash along a three-lane track, dodging obstacles (bar gates) and collecting coffee cups to keep the caffeine rush going!
 
-## Get started
+---
 
-1. Install dependencies
+## 🎮 Core Gameplay Loop
 
+1. **Automatic Dash**: The runner constantly runs forward automatically.
+2. **Three-Lane Control**: Swipe Left and Swipe Right to move between the **left, center, and right lanes**.
+3. **Coffee Collection**: Collect coffee cups to increase your score (+10 points each).
+4. **Obstacle Avoidance**: Dodge bar gates spawned randomly across lanes. Colliding with one results in a **Game Over**.
+5. **Caffeine Rush**: Game speed gradually increases over time, raising the challenge.
+6. **Persistence**: Tracks and persists high scores locally so you can always try to beat your best run.
+
+---
+
+## 🛠️ Technology Stack & Decisions
+
+To deliver a 60 FPS performance target and native-feeling animations on mobile devices, Coffee Runner is built on a modern, lightweight React Native stack without a heavy overhead game engine:
+
+*   **Framework**: [Expo](https://expo.dev/) (v56) with React Native
+*   **Language**: TypeScript
+*   **State Management**: [Zustand](https://github.com/pmndrs/zustand) (for fast, reactive global game state)
+*   **Animations**: [React Native Reanimated](https://docs.swmansion.com/react-native-reanimated/) (for smooth, GPU-accelerated UI transitions)
+*   **Gesture Control**: [React Native Gesture Handler](https://docs.swmansion.com/react-native-gesture-handler/) (for highly responsive swipe detection)
+*   **Storage**: `@react-native-async-storage/async-storage` (for offline high-score persistence)
+
+---
+
+## 📦 Project Directory Structure
+
+```text
+src/
+├── app/                       # Expo Router file-based screens
+│   ├── _layout.tsx            # Global app layout & providers
+│   ├── index.tsx              # Home Screen / Start Screen
+│   ├── game.tsx               # Game Screen (lane system & game loop)
+│   └── game-over.tsx          # Game Over Screen / Stats
+├── components/                # Reusable game and UI components
+│   ├── Player.tsx             # Animated runner character
+│   ├── Obstacle.tsx           # Spawned bar gate obstacle
+│   ├── CoffeeCup.tsx          # Collectible coffee cup
+│   └── Background.tsx         # Parallax / scrolling background
+├── store/                     # Global state management
+│   └── gameStore.ts           # Zustand store for scores, speed, and state
+├── hooks/                     # Custom hooks
+│   └── useGameLoop.ts         # Main game loop tick & spawning logic
+├── constants/                 # Shared configurations
+│   └── gameConstants.ts       # Lanes, speeds, spawn intervals, etc.
+└── utils/                     # Helper functions
+    ├── collision.ts           # Box collision detection logic
+    └── score.ts               # Score calculation helpers
+```
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+Make sure you have Node.js and the Expo Go app (or Android/iOS simulators) installed.
+
+### Setup
+
+1. **Install Dependencies**
    ```bash
    npm install
    ```
 
-2. Start the app
-
+2. **Start the Development Server**
    ```bash
-   npx expo start
+   npm run start
    ```
 
-In the output, you'll find options to open the app in a
+3. **Run on a Device or Simulator**
+   * Press `i` to open in the iOS Simulator.
+   * Press `a` to open in the Android Emulator.
+   * Scan the QR code with your mobile device's camera or the Expo Go app.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 📋 MVP Scope
 
-## Get a fresh project
+| Included in MVP | Excluded (Future Enhancements) |
+| :--- | :--- |
+| ✅ Three-lane runner movement | ❌ Jumping & sliding mechanics |
+| ✅ Smooth lane-switch animations | ❌ Character skins / cosmetic shop |
+| ✅ Coffee cup collection (+10 pts) | ❌ In-game power-ups & shields |
+| ✅ Bar-gate obstacles & collision | ❌ Global leaderboards |
+| ✅ Game Over screen & restarts | ❌ Multiplayer mode |
+| ✅ Local high score persistence | ❌ Daily rewards & challenges |
+| ✅ Gradual speed scaling over time | ❌ Background music & complex SFX |
 
-When you're ready, run:
+---
 
-```bash
-npm run reset-project
-```
+## 📈 Development Roadmap
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+The project is structured in 14 incremental phases to ensure modular development and testing:
 
-### Other setup steps
+*   **Phase 0**: Project Setup & Dependency Configuration
+*   **Phase 1**: Game Screen & Lane System Render
+*   **Phase 2**: Swipe Gesture & Player Lane Movement
+*   **Phase 3**: Zustand Store Setup (Score, Speed, Lane, Status)
+*   **Phase 4**: Obstacle Generation & Spawning System
+*   **Phase 5**: Coffee Spawning & Collection System
+*   **Phase 6**: Collision Detection Logic
+*   **Phase 7**: Main Game Loop System
+*   **Phase 8**: Speed Progression & Difficulty Scaling
+*   **Phase 9**: UI Screen Navigation Flow (Home, Play, Game Over)
+*   **Phase 10**: AsyncStorage Score Persistence
+*   **Phase 11**: Scrolling Road & Background Animation
+*   **Phase 12**: Sound Effects (SFX) Integration
+*   **Phase 13**: Quality Assurance, Bug Fixes & Optimization
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
