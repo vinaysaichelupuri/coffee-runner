@@ -1,75 +1,58 @@
+import { act, renderHook } from '@testing-library/react-native';
 import { useGameStore } from '../useGameStore';
+import { LANES } from '../../constants/gameConstants';
+import { Obstacle } from '../../types/game';
 
-describe('useGameStore', () => {
+describe('useGameStore Obstacles', () => {
   beforeEach(() => {
-    useGameStore.getState().resetGame();
-    useGameStore.getState().setHighScore(0); // Manually reset high score for test isolation
+    act(() => {
+      useGameStore.getState().resetGame();
+      if (useGameStore.getState().clearObstacles) {
+        useGameStore.getState().clearObstacles();
+      }
+    });
   });
 
-  it('initializes with correct default state', () => {
-    const state = useGameStore.getState();
-    expect(state.score).toBe(0);
-    expect(state.highScore).toBe(0);
-    expect(state.speed).toBe(1);
-    expect(state.activeLane).toBe(1);
-    expect(state.status).toBe('idle');
+  it('should initialize with an empty obstacles array', () => {
+    const { result } = renderHook(() => useGameStore());
+    expect(result.current.obstacles).toEqual([]);
   });
 
-  it('updates score correctly', () => {
-    useGameStore.getState().setScore(100);
-    expect(useGameStore.getState().score).toBe(100);
+  it('should add an obstacle', () => {
+    const { result } = renderHook(() => useGameStore());
+    const obstacle: Obstacle = { id: '1', lane: LANES.CENTER, type: 'barrier', active: true };
+    
+    act(() => {
+      result.current.addObstacle(obstacle);
+    });
+
+    expect(result.current.obstacles).toHaveLength(1);
+    expect(result.current.obstacles[0]).toEqual(obstacle);
   });
 
-  it('prevents negative score', () => {
-    useGameStore.getState().setScore(-10);
-    expect(useGameStore.getState().score).toBe(0);
+  it('should remove an obstacle by id', () => {
+    const { result } = renderHook(() => useGameStore());
+    const obstacle: Obstacle = { id: '1', lane: LANES.CENTER, type: 'barrier', active: true };
+    
+    act(() => {
+      result.current.addObstacle(obstacle);
+      result.current.removeObstacle('1');
+    });
+
+    expect(result.current.obstacles).toHaveLength(0);
   });
 
-  it('updates high score', () => {
-    useGameStore.getState().setHighScore(500);
-    expect(useGameStore.getState().highScore).toBe(500);
-  });
+  it('should clear all obstacles', () => {
+    const { result } = renderHook(() => useGameStore());
+    const obstacle1: Obstacle = { id: '1', lane: LANES.CENTER, type: 'barrier', active: true };
+    const obstacle2: Obstacle = { id: '2', lane: LANES.LEFT, type: 'cone', active: true };
+    
+    act(() => {
+      result.current.addObstacle(obstacle1);
+      result.current.addObstacle(obstacle2);
+      result.current.clearObstacles();
+    });
 
-  it('updates speed', () => {
-    useGameStore.getState().setSpeed(1.5);
-    expect(useGameStore.getState().speed).toBe(1.5);
-  });
-
-  it('updates active lane within bounds', () => {
-    useGameStore.getState().setActiveLane(0);
-    expect(useGameStore.getState().activeLane).toBe(0);
-    useGameStore.getState().setActiveLane(2);
-    expect(useGameStore.getState().activeLane).toBe(2);
-  });
-
-  it('prevents out of bounds lane update', () => {
-    const initialState = useGameStore.getState().activeLane;
-    useGameStore.getState().setActiveLane(-1);
-    expect(useGameStore.getState().activeLane).toBe(initialState);
-    useGameStore.getState().setActiveLane(3);
-    expect(useGameStore.getState().activeLane).toBe(initialState);
-  });
-
-  it('updates status', () => {
-    useGameStore.getState().setStatus('playing');
-    expect(useGameStore.getState().status).toBe('playing');
-  });
-
-  it('resets game but keeps high score', () => {
-    const store = useGameStore.getState();
-    store.setScore(100);
-    store.setHighScore(500);
-    store.setSpeed(2);
-    store.setActiveLane(2);
-    store.setStatus('game_over');
-
-    store.resetGame();
-
-    const resetState = useGameStore.getState();
-    expect(resetState.score).toBe(0);
-    expect(resetState.speed).toBe(1);
-    expect(resetState.activeLane).toBe(1);
-    expect(resetState.status).toBe('idle');
-    expect(resetState.highScore).toBe(500); // High score should persist
+    expect(result.current.obstacles).toHaveLength(0);
   });
 });

@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { Obstacle } from '../types/game';
 
 export type GameStatus = 'idle' | 'playing' | 'game_over';
 
@@ -8,12 +9,16 @@ export interface GameState {
   speed: number;
   activeLane: number;
   status: GameStatus;
+  obstacles: Obstacle[];
   
   setScore: (score: number) => void;
   setHighScore: (highScore: number) => void;
   setSpeed: (speed: number) => void;
   setActiveLane: (lane: number) => void;
   setStatus: (status: GameStatus) => void;
+  addObstacle: (obstacle: Obstacle) => void;
+  removeObstacle: (id: string) => void;
+  clearObstacles: () => void;
   resetGame: () => void;
 }
 
@@ -23,6 +28,7 @@ const initialState = {
   speed: 1,
   activeLane: 1,
   status: 'idle' as GameStatus,
+  obstacles: [] as Obstacle[],
 };
 
 export const useGameStore = create<GameState>()((set) => ({
@@ -37,5 +43,8 @@ export const useGameStore = create<GameState>()((set) => ({
     }
   },
   setStatus: (status) => set({ status }),
+  addObstacle: (obstacle) => set((state) => ({ obstacles: [...state.obstacles, obstacle] })),
+  removeObstacle: (id) => set((state) => ({ obstacles: state.obstacles.filter((o) => o.id !== id) })),
+  clearObstacles: () => set({ obstacles: [] }),
   resetGame: () => set((state) => ({ ...initialState, highScore: state.highScore })), // High score should persist across resets
 }));
