@@ -1,54 +1,163 @@
-<!--
-Sync Impact Report:
-- Version change: 0.0.0 -> 1.0.0 (Initial Ratification)
-- List of modified principles:
-  - [PRINCIPLE_1_NAME] -> I. Smooth Gameplay & Performance (60 FPS)
-  - [PRINCIPLE_2_NAME] -> II. Decoupled Game Logic & UI (State Machine)
-  - [PRINCIPLE_3_NAME] -> III. Type-Safe, Reusable Components
-  - [PRINCIPLE_4_NAME] -> IV. Scalable & Extensible Architecture
-  - [PRINCIPLE_5_NAME] -> V. Comprehensive Testing Discipline
-- Added sections:
-  - Technical & Performance Standards (replacing SECTION_2)
-  - Development & Testing Workflow (replacing SECTION_3)
-- Templates requiring updates:
-  - Plan Template (.specify/templates/plan-template.md): ✅ updated
-  - Tasks Template (.specify/templates/tasks-template.md): ✅ updated
-  - Spec Template (.specify/templates/spec-template.md): ✅ updated
-- Follow-up TODOs: None (all placeholders filled)
--->
-
 # Coffee Runner Constitution
 
 ## Core Principles
 
-### I. Smooth Gameplay & Performance (60 FPS)
-The game MUST run at a consistent 60 FPS on modern mobile devices. Frame budgets are critical; developers MUST minimize JS thread usage by offloading animations and gestures to the native thread using React Native Reanimated and React Native Gesture Handler. Avoid deep component hierarchies and frequent React state re-renders in the core game loop. Assets (images, audio) MUST be preloaded and optimized.
+### I. Gameplay First
 
-### II. Decoupled Game Logic & UI (State Machine)
-The game loop, physics/collision detection, and state machine MUST be completely decoupled from the rendering/UI components. The core game logic MUST be implemented as pure, platform-independent functions and state transitions, allowing it to be run, tested, and validated in isolation without mounting React components or depending on device UI loops.
+The primary goal of Coffee Runner is to deliver a smooth, responsive, and enjoyable endless runner experience. All implementation decisions should prioritize gameplay quality, responsiveness, and player experience over unnecessary technical complexity.
 
-### III. Type-Safe, Reusable Components
-All game elements (Player, Obstacle, Lane, Cup, Scoreboard) MUST be written in strict TypeScript with explicit, strongly typed interfaces. Game elements MUST be implemented as highly reusable components, avoiding ad-hoc styling and direct inline logic. A clear hierarchy of components MUST be maintained.
+### II. React Native Native-First Architecture
 
-### IV. Scalable & Extensible Architecture
-The architecture MUST support future expansion (e.g., power-ups, character skins, new obstacle patterns, multiple themes) without modifying the core runner engine. Use a modular plugin or system-based pattern for game entities and state managers, enabling new gameplay features to be registered dynamically.
+The game MUST be built using React Native without a dedicated game engine. Core functionality should leverage:
 
-### V. Comprehensive Testing Discipline
-Uncompromising test coverage is required. Pure logic, collision detection, and score calculations MUST have 100% unit test coverage. Critical user flows (e.g., swiping lanes, hit detection, game over states) MUST be covered by integration or component tests. Tests for new features MUST be defined and agreed upon in specifications before execution.
+* React Native
+* React Native Reanimated
+* React Native Gesture Handler
+* Zustand
+* AsyncStorage
 
-## Technical & Performance Standards
-1. **Animation & Physics**: Use declarative React Native Reanimated animations where possible to keep interactions smooth on the UI thread. Use React Native Gesture Handler for swipe detection.
-2. **Asset Management**: Compress all image/audio assets. Load critical game assets during a boot/loading sequence before starting the gameplay.
-3. **Memory Management**: Avoid memory leaks in the game loop; clean up all active listeners, intervals, and animation frames on component unmount or when returning to main menus.
+Additional dependencies should only be introduced when they provide clear value.
 
-## Development & Testing Workflow
-1. **Component Design**: Build UI components using the predefined design system (vibrant colors, clean HSL styling, and micro-animations). Use vanilla React Native StyleSheet for performance.
-2. **PR Requirements**: Every pull request that introduces or modifies core logic must include tests that cover all edge cases (e.g., rapid consecutive swipes, simultaneous obstacle collisions, boundary lane transitions).
-3. **Performance Auditing**: Profile app performance regularly. Any regression in average frame rate below 58 FPS on standard test configurations is a blocking issue.
+### III. Separation of Concerns
+
+Game logic, rendering, and state management MUST remain separated.
+
+Examples:
+
+* Collision detection should not live inside UI components.
+* Score calculations should be handled by utility functions or stores.
+* UI components should focus on presentation.
+
+This ensures maintainability and easier future enhancements.
+
+### IV. Reusable & Type-Safe Components
+
+All code MUST use TypeScript.
+
+Game entities such as:
+
+* Player
+* Obstacle
+* Coffee Cup
+* Lane
+* Scoreboard
+
+should be implemented as reusable components with clearly defined interfaces.
+
+Avoid duplicated logic whenever possible.
+
+### V. Incremental Development
+
+Features MUST be implemented in small, testable phases.
+
+Development order:
+
+1. Project Setup
+2. Player Movement
+3. Obstacle System
+4. Coffee Collection
+5. Game Loop
+6. UI Screens
+7. High Score Persistence
+8. Polish & Optimization
+
+Each phase should be functional before moving to the next.
+
+---
+
+## Technical Standards
+
+### State Management
+
+Use Zustand as the primary state management solution.
+
+### Animations
+
+Use React Native Reanimated for:
+
+* Lane switching
+* Object movement
+* UI transitions
+
+Avoid unnecessary React state updates inside animation-heavy code.
+
+### Gestures
+
+Use React Native Gesture Handler for swipe detection.
+
+### Persistence
+
+Use AsyncStorage for:
+
+* High score storage
+* Future local game settings
+
+### Performance
+
+The application should target:
+
+* 60 FPS where possible
+* Minimal unnecessary re-renders
+* Proper cleanup of timers, intervals, and animation frames
+
+---
+
+## Testing Standards
+
+### Required Testing
+
+The following systems must have tests:
+
+* Collision Detection
+* Score Calculation
+* Lane Switching Logic
+* Game Over Logic
+
+### Manual Testing Checklist
+
+Before merging features:
+
+* Player can switch lanes correctly
+* Obstacles collide correctly
+* Coffee cups increase score
+* Speed increases over time
+* Restart works correctly
+* High score persists after app restart
+
+---
+
+## Folder Structure Standards
+
+The project should follow:
+
+src/
+├── assets/
+├── components/
+├── screens/
+├── hooks/
+├── store/
+├── utils/
+├── constants/
+└── types/
+
+All new features should be added to the appropriate module.
+
+---
 
 ## Governance
-1. **Constitution Authority**: This constitution defines the core invariants for Coffee Runner. All feature specifications, design docs, and implementation tasks must comply.
-2. **Amendments**: Amendments require a MINOR or MAJOR version bump. Proposed amendments must specify a clear migration plan for existing components.
-3. **Compliance Reviews**: At each design gate (e.g. Plan Phase, Tasks Phase), the team must execute a 'Constitution Check' to verify alignment. Use [AGENTS.md](file:///Users/vinaysaichelupuri/Documents/projects/coffee-runner/AGENTS.md) to keep instructions and version requirements aligned for all developers.
 
-**Version**: 1.0.0 | **Ratified**: 2026-05-29 | **Last Amended**: 2026-05-29
+### Constitution Authority
+
+This constitution serves as the source of truth for architecture and development decisions.
+
+### Amendments
+
+Changes to architecture, libraries, or development principles must be reflected in this constitution.
+
+### Compliance
+
+All generated plans, tasks, and specifications must align with this document before implementation begins.
+
+Version: 1.1.0
+Ratified: 2026-05-29
+Last Amended: 2026-05-30
