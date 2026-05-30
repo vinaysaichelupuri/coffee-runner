@@ -8,3 +8,9 @@ export interface Obstacle {
   type: ObstacleType;
   active: boolean;
 }
+
+export interface Coffee {
+  id: string;
+  lane: Lane;
+  active: boolean;
+}

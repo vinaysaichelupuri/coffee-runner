@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Obstacle } from '../types/game';
+import { Obstacle, Coffee } from '../types/game';
 
 export type GameStatus = 'idle' | 'playing' | 'game_over';
 
@@ -10,6 +10,7 @@ export interface GameState {
   activeLane: number;
   status: GameStatus;
   obstacles: Obstacle[];
+  coffees: Coffee[];
   
   setScore: (score: number) => void;
   setHighScore: (highScore: number) => void;
@@ -20,6 +21,10 @@ export interface GameState {
   removeObstacle: (id: string) => void;
   clearObstacles: () => void;
   resetGame: () => void;
+  addCoffee: (coffee: Coffee) => void;
+  removeCoffee: (id: string) => void;
+  clearCoffees: () => void;
+  collectCoffee: (id: string) => void;
 }
 
 const initialState = {
@@ -29,6 +34,7 @@ const initialState = {
   activeLane: 1,
   status: 'idle' as GameStatus,
   obstacles: [] as Obstacle[],
+  coffees: [] as Coffee[],
 };
 
 export const useGameStore = create<GameState>()((set) => ({
@@ -46,5 +52,16 @@ export const useGameStore = create<GameState>()((set) => ({
   addObstacle: (obstacle) => set((state) => ({ obstacles: [...state.obstacles, obstacle] })),
   removeObstacle: (id) => set((state) => ({ obstacles: state.obstacles.filter((o) => o.id !== id) })),
   clearObstacles: () => set({ obstacles: [] }),
+  addCoffee: (coffee) => set((state) => ({ coffees: [...state.coffees, coffee] })),
+  removeCoffee: (id) => set((state) => ({ coffees: state.coffees.filter((c) => c.id !== id) })),
+  clearCoffees: () => set({ coffees: [] }),
+  collectCoffee: (id) => set((state) => {
+    const coffeeExists = state.coffees.some((c) => c.id === id);
+    if (!coffeeExists) return {}; // Do nothing if already collected
+    return {
+      score: state.score + 10,
+      coffees: state.coffees.filter((c) => c.id !== id)
+    };
+  }),
   resetGame: () => set((state) => ({ ...initialState, highScore: state.highScore })), // High score should persist across resets
 }));
