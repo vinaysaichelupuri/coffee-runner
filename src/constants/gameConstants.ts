@@ -5,3 +5,6 @@ export const LANES = {
 } as const;
 
 export type Lane = typeof LANES[keyof typeof LANES];
+
+export const OBSTACLE_SPAWN_INTERVAL = 1500; // ms
+export const OBSTACLE_SPEED = 5000; // ms duration for full screen
