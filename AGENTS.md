@@ -4,5 +4,6 @@ Read the exact versioned docs at https://docs.expo.dev/versions/v56.0.0/ before 
 
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
-shell commands, and other important information, read the current plan
+shell commands, and other important information, read the current plan:
+[specs/001-project-setup/plan.md](file:///Users/vinaysaichelupuri/Documents/projects/coffee-runner/specs/001-project-setup/plan.md)
 <!-- SPECKIT END -->
