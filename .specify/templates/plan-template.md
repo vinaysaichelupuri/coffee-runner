@@ -40,7 +40,11 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- **P1: Smooth Gameplay & Performance (60 FPS)**: Does the design explicitly optimize rendering and offload animations/gestures to the native thread using Reanimated/Gesture Handler?
+- **P2: Decoupled Game Logic & UI**: Is the core game logic (loop, physics, swipe reactions) decoupled from the UI/React rendering components?
+- **P3: Type-Safe, Reusable Components**: Are the components written in TypeScript with explicit, strongly typed interfaces?
+- **P4: Scalable & Extensible Architecture**: Does the architecture support adding future features (power-ups, skins, obstacles) modularly?
+- **P5: Comprehensive Testing Discipline**: Are there explicit unit tests for the pure game logic (100% target) and integration/component tests for user stories?
 
 ## Project Structure
 

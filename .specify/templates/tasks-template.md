@@ -63,12 +63,12 @@ description: "Task list template for feature implementation"
 
 Examples of foundational tasks (adjust based on your project):
 
-- [ ] T004 Setup database schema and migrations framework
-- [ ] T005 [P] Implement authentication/authorization framework
-- [ ] T006 [P] Setup API routing and middleware structure
-- [ ] T007 Create base models/entities that all stories depend on
-- [ ] T008 Configure error handling and logging infrastructure
-- [ ] T009 Setup environment configuration management
+- [ ] T004 Setup game loop controller and state machine definitions
+- [ ] T005 [P] Setup swipe gesture detection with React Native Gesture Handler
+- [ ] T006 [P] Setup physics boundaries, lane layouts, and collision detection rules
+- [ ] T007 Create base models/entities (Player, Obstacle, Lane, Cup) that all stories depend on
+- [ ] T008 Configure sound effects, music, and asset preloading infrastructure
+- [ ] T009 Setup game environment configurations (e.g., initial speed, acceleration, spawn rates)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
