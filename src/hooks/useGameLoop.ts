@@ -3,6 +3,7 @@ import { useGameStore } from '../store/useGameStore';
 import { getRandomLane, generateId } from '../utils/spawner';
 import { isColliding, BoundingBox } from '../utils/collision';
 import { playerFractionalLane } from '../utils/globalShared';
+import { Lane } from '../constants/gameConstants';
 import { Dimensions } from 'react-native';
 
 const { height } = Dimensions.get('window');
@@ -11,22 +12,36 @@ const PLAYER_HEIGHT = 80;
 
 interface ActiveEntity {
   id: string;
-  lane: number;
+  lane: Lane;
   spawnDistance: number;
   type: 'obstacle' | 'coffee';
   active: boolean;
 }
 
+// Top-level JS functions to safely call Zustand from Reanimated worklets
+const spawnEntityOnJS = (isCoffee: boolean, id: string, lane: Lane, spawnDistance: number) => {
+  if (isCoffee) {
+    useGameStore.getState().addCoffee({ id, lane, active: true, spawnDistance });
+  } else {
+    const type = Math.random() > 0.5 ? 'barrier' : 'cone';
+    useGameStore.getState().addObstacle({ id, lane, type, active: true, spawnDistance });
+  }
+};
+
+const cleanupEntityOnJS = (type: 'coffee' | 'obstacle', id: string) => {
+  if (type === 'coffee') useGameStore.getState().removeCoffee(id);
+  else useGameStore.getState().removeObstacle(id);
+};
+
+const handleCollisionOnJS = (type: 'coffee' | 'obstacle', id: string) => {
+  if (type === 'coffee') useGameStore.getState().handleCoffeeCollision(id);
+  else useGameStore.getState().handleObstacleCollision(id);
+};
+
 export const useGameLoop = () => {
   const status = useGameStore(state => state.status);
   const speed = useGameStore(state => state.speed);
   const spawnInterval = useGameStore(state => state.spawnInterval);
-  const addObstacle = useGameStore(state => state.addObstacle);
-  const addCoffee = useGameStore(state => state.addCoffee);
-  const removeObstacle = useGameStore(state => state.removeObstacle);
-  const removeCoffee = useGameStore(state => state.removeCoffee);
-  const handleObstacleCollision = useGameStore(state => state.handleObstacleCollision);
-  const handleCoffeeCollision = useGameStore(state => state.handleCoffeeCollision);
   
   const globalDistance = useSharedValue(0);
   const lastSpawnTime = useSharedValue(0);
@@ -52,14 +67,7 @@ export const useGameLoop = () => {
       const newEntity: ActiveEntity = { id, lane, type: isCoffee ? 'coffee' : 'obstacle', spawnDistance, active: true };
       entitiesSV.value = [...entitiesSV.value, newEntity];
       
-      runOnJS(() => {
-        if (isCoffee) {
-          addCoffee({ id, lane, active: true, spawnDistance });
-        } else {
-          const type = Math.random() > 0.5 ? 'barrier' : 'cone';
-          addObstacle({ id, lane, type, active: true, spawnDistance });
-        }
-      })();
+      runOnJS(spawnEntityOnJS)(isCoffee, id, lane, spawnDistance);
     }
 
     // Collision detection and cleanup logic
@@ -76,8 +84,7 @@ export const useGameLoop = () => {
       // C1 Fix: Off-screen cleanup
       if (translateY > height + 100) {
         updatedEntities = true;
-        if (entity.type === 'coffee') runOnJS(removeCoffee)(entity.id);
-        else runOnJS(removeObstacle)(entity.id);
+        runOnJS(cleanupEntityOnJS)(entity.type, entity.id);
         continue;
       }
 
@@ -88,11 +95,7 @@ export const useGameLoop = () => {
 
       if (isColliding(playerBox, entityBox, 0.6)) {
         updatedEntities = true;
-        if (entity.type === 'coffee') {
-          runOnJS(handleCoffeeCollision)(entity.id);
-        } else {
-          runOnJS(handleObstacleCollision)(entity.id);
-        }
+        runOnJS(handleCollisionOnJS)(entity.type, entity.id);
         continue;
       }
 

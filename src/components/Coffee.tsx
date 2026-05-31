@@ -2,13 +2,10 @@ import React, { useEffect } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import Animated, { 
   useAnimatedStyle, 
-  useAnimatedReaction,
-  SharedValue,
-  runOnJS
+  SharedValue
 } from 'react-native-reanimated';
 import { Coffee as CoffeeType } from '../types/game';
 import { OBSTACLE_SPEED } from '../constants/gameConstants';
-import { useGameStore } from '../store/useGameStore';
 
 const { width, height } = Dimensions.get('window');
 // Assume LANE_WIDTH is defined in constants or derived here.
@@ -20,16 +17,7 @@ interface Props {
 }
 
 export const Coffee: React.FC<Props> = ({ coffee, globalDistance }) => {
-  const removeCoffee = useGameStore((state) => state.removeCoffee);
-
-  useAnimatedReaction(
-    () => globalDistance.value - coffee.spawnDistance,
-    (translateY) => {
-      if (translateY > height + 100 && coffee.active) {
-        runOnJS(removeCoffee)(coffee.id);
-      }
-    }
-  );
+  // Offscreen cleanup is handled centrally by useGameLoop.
 
   const animatedStyle = useAnimatedStyle(() => {
     return {

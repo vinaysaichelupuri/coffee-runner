@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
-import Animated, { useAnimatedStyle, useAnimatedReaction, SharedValue, runOnJS } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, SharedValue } from 'react-native-reanimated';
 import { Obstacle as ObstacleType } from '../types/game';
 import { LANES, OBSTACLE_SPEED } from '../constants/gameConstants';
-import { useGameStore } from '../store/useGameStore';
 
 const { width, height } = Dimensions.get('window');
 const LANE_WIDTH = width / 3;
@@ -14,18 +13,8 @@ interface Props {
 }
 
 export const Obstacle: React.FC<Props> = ({ obstacle, globalDistance }) => {
-  const removeObstacle = useGameStore((state) => state.removeObstacle);
-
   // We don't need a local translateY, we compute it directly in animated style
-  // But we need to detect when it goes off screen to remove it.
-  useAnimatedReaction(
-    () => globalDistance.value - obstacle.spawnDistance,
-    (translateY) => {
-      if (translateY > height + 100 && obstacle.active) {
-        runOnJS(removeObstacle)(obstacle.id);
-      }
-    }
-  );
+  // Offscreen cleanup is handled centrally by useGameLoop.
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
