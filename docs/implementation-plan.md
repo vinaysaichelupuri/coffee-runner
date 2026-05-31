@@ -237,134 +237,79 @@ Collision system is reliable and consistent.
 
 ---
 
-# Phase 7 - Game Loop System
+# Phase 7 - Core Gameplay Loop & Progression
 
 ## Objective
 
-Create the continuous gameplay loop.
+Build the complete gameplay engine that powers the endless runner experience.
 
 ## Requirements
+
+### Game Loop
 
 * Frame update system
-* Entity updates
-* Position updates
-* Spawn updates
-* Collision updates
-
-## Deliverables
-
-* Continuous gameplay
 * Stable update cycle
+* Entity lifecycle management
+* Position updates
 
-## Exit Criteria
+### Gameplay Systems
 
-Game runs continuously without freezing or leaks.
+* Obstacle spawning
+* Coffee spawning
+* Collision detection
+* Score tracking
 
----
-
-# Phase 8 - Difficulty Scaling
-
-## Objective
-
-Gradually increase game difficulty.
-
-## Requirements
+### Difficulty Scaling
 
 * Speed progression system
-* Spawn rate adjustments
+* Spawn rate progression
 * Difficulty configuration
 
 ## Deliverables
 
-* Gameplay speed increases over time
+* Continuous gameplay loop
+* Collision handling
+* Dynamic spawning
+* Progressive difficulty increase
 
 ## Exit Criteria
 
-Game becomes progressively harder.
+* Game runs continuously without freezes
+* Objects spawn correctly
+* Collisions are detected accurately
+* Difficulty increases gradually over time
 
 ---
 
-# Phase 9 - User Interface Flow
+# Phase 8 - User Experience & Visual Feedback
 
 ## Objective
 
-Create complete application flow.
+Create a polished player experience through navigation, animations, and audio feedback.
 
 ## Requirements
 
-### Home Screen
+### Application Flow
+
+#### Home Screen
 
 * Game title
 * Play button
 * High score display
 
-### Game Over Screen
+#### Game Over Screen
 
-* Final score
-* High score
+* Final score display
+* High score display
 * Restart button
 
-## Deliverables
-
-* Complete navigation flow
-
-## Exit Criteria
-
-User can start, play, lose, and restart.
-
----
-
-# Phase 10 - Persistence Layer
-
-## Objective
-
-Persist important game data.
-
-## Requirements
-
-* Save high score
-* Load high score
-* Update high score
-
-## Deliverables
-
-* High score survives app restart
-
-## Exit Criteria
-
-Stored data loads correctly after relaunch.
-
----
-
-# Phase 11 - Background Animation
-
-## Objective
-
-Improve visual immersion.
-
-## Requirements
+### Background Animation
 
 * Scrolling road effect
-* Continuous movement illusion
+* Forward movement illusion
 * Reanimated implementation
 
-## Deliverables
-
-* Running effect visible
-
-## Exit Criteria
-
-Player perceives forward motion.
-
----
-
-# Phase 12 - Audio System
-
-## Objective
-
-Add basic game feedback.
-
-## Requirements
+### Audio System
 
 * Coffee collection sound
 * Collision sound
@@ -372,15 +317,62 @@ Add basic game feedback.
 
 ## Deliverables
 
-* Audio feedback implemented
+* Complete navigation flow
+* Animated background
+* Gameplay sound effects
 
 ## Exit Criteria
 
-Core gameplay events provide audio feedback.
+* User can start, play, lose, and restart
+* Running motion is visually convincing
+* Core events provide audio feedback
 
 ---
 
-# Phase 13 - Testing & Optimization
+# Phase 9 - Persistence, Testing & Release Readiness
+
+## Objective
+
+Prepare the MVP for stable deployment and long-term playability.
+
+## Requirements
+
+### Persistence Layer
+
+* Save high score
+* Load high score
+* Update high score
+
+### Testing
+
+* Collision testing
+* Gameplay testing
+* Difficulty validation
+* Performance testing
+
+### Optimization
+
+* Memory cleanup verification
+* FPS stability checks
+* Bug fixing
+* Resource optimization
+
+## Deliverables
+
+* Persistent high score system
+* Tested and optimized gameplay
+* MVP release candidate
+
+## Exit Criteria
+
+* High score survives app restart
+* No memory leaks detected
+* Stable performance on target devices
+* All MVP requirements completed
+
+---
+
+
 
 ## Objective
 

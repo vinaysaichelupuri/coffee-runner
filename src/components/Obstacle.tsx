@@ -4,6 +4,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming, Easing, runOnJS
 import { Obstacle as ObstacleType } from '../types/game';
 import { LANES, OBSTACLE_SPEED } from '../constants/gameConstants';
 import { useGameStore } from '../store/useGameStore';
+import { useGameLoop } from '../hooks/useGameLoop';
 
 const { width, height } = Dimensions.get('window');
 const LANE_WIDTH = width / 3;
@@ -14,7 +15,18 @@ interface Props {
 
 export const Obstacle: React.FC<Props> = ({ obstacle }) => {
   const translateY = useSharedValue(-100);
+  const isActive = useSharedValue(true);
   const removeObstacle = useGameStore((state) => state.removeObstacle);
+  const handleObstacleCollision = useGameStore((state) => state.handleObstacleCollision);
+
+  useGameLoop(
+    obstacle.lane,
+    translateY,
+    50, // obstacle height
+    isActive,
+    handleObstacleCollision,
+    obstacle.id
+  );
 
   useEffect(() => {
     // Animate downward
