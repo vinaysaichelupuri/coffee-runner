@@ -20,7 +20,10 @@ describe('useGameStore Obstacles', () => {
 
   it('should add an obstacle', () => {
     const { result } = renderHook(() => useGameStore());
-    const obstacle: Obstacle = { id: '1', lane: LANES.CENTER, type: 'barrier', active: true };
+    const obstacle: Obstacle = {
+      id: '1', lane: LANES.CENTER, type: 'barrier', active: true,
+      spawnDistance: 0
+    };
     
     act(() => {
       result.current.addObstacle(obstacle);
@@ -32,7 +35,10 @@ describe('useGameStore Obstacles', () => {
 
   it('should remove an obstacle by id', () => {
     const { result } = renderHook(() => useGameStore());
-    const obstacle: Obstacle = { id: '1', lane: LANES.CENTER, type: 'barrier', active: true };
+    const obstacle: Obstacle = {
+      id: '1', lane: LANES.CENTER, type: 'barrier', active: true,
+      spawnDistance: 0
+    };
     
     act(() => {
       result.current.addObstacle(obstacle);
@@ -44,8 +50,14 @@ describe('useGameStore Obstacles', () => {
 
   it('should clear all obstacles', () => {
     const { result } = renderHook(() => useGameStore());
-    const obstacle1: Obstacle = { id: '1', lane: LANES.CENTER, type: 'barrier', active: true };
-    const obstacle2: Obstacle = { id: '2', lane: LANES.LEFT, type: 'cone', active: true };
+    const obstacle1: Obstacle = {
+      id: '1', lane: LANES.CENTER, type: 'barrier', active: true,
+      spawnDistance: 0
+    };
+    const obstacle2: Obstacle = {
+      id: '2', lane: LANES.LEFT, type: 'cone', active: true,
+      spawnDistance: 0
+    };
     
     act(() => {
       result.current.addObstacle(obstacle1);
@@ -74,7 +86,10 @@ describe('useGameStore Coffees', () => {
 
   it('should add a coffee', () => {
     const { result } = renderHook(() => useGameStore());
-    const coffee: Coffee = { id: 'c1', lane: LANES.CENTER, active: true };
+    const coffee: Coffee = {
+      id: 'c1', lane: LANES.CENTER, active: true,
+      spawnDistance: 0
+    };
     
     act(() => {
       result.current.addCoffee(coffee);
@@ -86,7 +101,10 @@ describe('useGameStore Coffees', () => {
 
   it('should remove a coffee by id', () => {
     const { result } = renderHook(() => useGameStore());
-    const coffee: Coffee = { id: 'c1', lane: LANES.CENTER, active: true };
+    const coffee: Coffee = {
+      id: 'c1', lane: LANES.CENTER, active: true,
+      spawnDistance: 0
+    };
     
     act(() => {
       result.current.addCoffee(coffee);
@@ -98,8 +116,14 @@ describe('useGameStore Coffees', () => {
 
   it('should clear all coffees', () => {
     const { result } = renderHook(() => useGameStore());
-    const coffee1: Coffee = { id: 'c1', lane: LANES.CENTER, active: true };
-    const coffee2: Coffee = { id: 'c2', lane: LANES.LEFT, active: true };
+    const coffee1: Coffee = {
+      id: 'c1', lane: LANES.CENTER, active: true,
+      spawnDistance: 0
+    };
+    const coffee2: Coffee = {
+      id: 'c2', lane: LANES.LEFT, active: true,
+      spawnDistance: 0
+    };
     
     act(() => {
       result.current.addCoffee(coffee1);
@@ -112,7 +136,10 @@ describe('useGameStore Coffees', () => {
 
   it('should increment score and remove coffee on collectCoffee', () => {
     const { result } = renderHook(() => useGameStore());
-    const coffee: Coffee = { id: 'c1', lane: LANES.CENTER, active: true };
+    const coffee: Coffee = {
+      id: 'c1', lane: LANES.CENTER, active: true,
+      spawnDistance: 0
+    };
     
     act(() => {
       result.current.addCoffee(coffee);

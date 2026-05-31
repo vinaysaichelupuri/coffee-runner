@@ -23,6 +23,7 @@ export const useObstacleSpawner = () => {
           lane: randomLane,
           type: randomType,
           active: true,
+          spawnDistance: 0,
         };
 
         addObstacle(newObstacle);

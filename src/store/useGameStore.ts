@@ -7,6 +7,8 @@ export interface GameState {
   score: number;
   highScore: number;
   speed: number;
+  baseSpeed: number;
+  spawnInterval: number;
   activeLane: number;
   status: GameStatus;
   obstacles: Obstacle[];
@@ -15,6 +17,7 @@ export interface GameState {
   setScore: (score: number) => void;
   setHighScore: (highScore: number) => void;
   setSpeed: (speed: number) => void;
+  setSpawnInterval: (interval: number) => void;
   setActiveLane: (lane: number) => void;
   setStatus: (status: GameStatus) => void;
   addObstacle: (obstacle: Obstacle) => void;
@@ -32,7 +35,9 @@ export interface GameState {
 const initialState = {
   score: 0,
   highScore: 0,
-  speed: 1,
+  speed: 5,
+  baseSpeed: 5,
+  spawnInterval: 2000,
   activeLane: 1,
   status: 'idle' as GameStatus,
   obstacles: [] as Obstacle[],
@@ -45,6 +50,7 @@ export const useGameStore = create<GameState>()((set) => ({
   setScore: (score) => set({ score: Math.max(0, score) }),
   setHighScore: (highScore) => set({ highScore: Math.max(0, highScore) }),
   setSpeed: (speed) => set({ speed: Math.max(0, speed) }),
+  setSpawnInterval: (interval) => set({ spawnInterval: Math.max(0, interval) }),
   setActiveLane: (lane) => {
     if (lane >= 0 && lane <= 2) {
       set({ activeLane: lane });
