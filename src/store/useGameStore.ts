@@ -25,6 +25,8 @@ export interface GameState {
   removeCoffee: (id: string) => void;
   clearCoffees: () => void;
   collectCoffee: (id: string) => void;
+  handleObstacleCollision: (id: string) => void;
+  handleCoffeeCollision: (id: string) => void;
 }
 
 const initialState = {
@@ -63,5 +65,10 @@ export const useGameStore = create<GameState>()((set) => ({
       coffees: state.coffees.filter((c) => c.id !== id)
     };
   }),
+  handleObstacleCollision: (id) => set({ status: 'game_over' }),
+  handleCoffeeCollision: (id) => {
+    // Re-use collectCoffee logic
+    useGameStore.getState().collectCoffee(id);
+  },
   resetGame: () => set((state) => ({ ...initialState, highScore: state.highScore })), // High score should persist across resets
 }));

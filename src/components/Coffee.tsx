@@ -5,13 +5,12 @@ import Animated, {
   useSharedValue, 
   withTiming, 
   Easing, 
-  runOnJS,
-  useAnimatedReaction
+  runOnJS
 } from 'react-native-reanimated';
 import { Coffee as CoffeeType } from '../types/game';
 import { OBSTACLE_SPEED } from '../constants/gameConstants';
 import { useGameStore } from '../store/useGameStore';
-import { usePlayerStore } from '../store/usePlayerStore';
+import { useGameLoop } from '../hooks/useGameLoop';
 
 const { width, height } = Dimensions.get('window');
 // Assume LANE_WIDTH is defined in constants or derived here.
@@ -23,16 +22,18 @@ interface Props {
 
 export const Coffee: React.FC<Props> = ({ coffee }) => {
   const translateY = useSharedValue(-100);
-  const hasCollected = useSharedValue(false);
+  const isActive = useSharedValue(true);
   const removeCoffee = useGameStore((state) => state.removeCoffee);
-  const collectCoffee = useGameStore((state) => state.collectCoffee);
-  
-  const currentLane = usePlayerStore((state) => state.currentLane);
-  const playerLaneSV = useSharedValue(currentLane);
+  const handleCoffeeCollision = useGameStore((state) => state.handleCoffeeCollision);
 
-  useEffect(() => {
-    playerLaneSV.value = currentLane;
-  }, [currentLane, playerLaneSV]);
+  useGameLoop(
+    coffee.lane,
+    translateY,
+    50, // coffee height
+    isActive,
+    handleCoffeeCollision,
+    coffee.id
+  );
 
   useEffect(() => {
     // Animate downward
@@ -40,27 +41,12 @@ export const Coffee: React.FC<Props> = ({ coffee }) => {
       height + 100, 
       { duration: OBSTACLE_SPEED, easing: Easing.linear },
       (finished) => {
-        if (finished && !hasCollected.value) {
+        if (finished && isActive.value) {
           runOnJS(removeCoffee)(coffee.id);
         }
       }
     );
-  }, [translateY, coffee.id, removeCoffee]);
-
-  // Collision detection
-  useAnimatedReaction(
-    () => translateY.value,
-    (currentY) => {
-      // Player is near the bottom: container has paddingBottom 50, player is 50x50.
-      // So player top is around height - 100. Let's use a threshold.
-      if (currentY > height - 120 && currentY < height - 50 && !hasCollected.value) {
-        if (coffee.lane === playerLaneSV.value) {
-          hasCollected.value = true;
-          runOnJS(collectCoffee)(coffee.id);
-        }
-      }
-    }
-  );
+  }, [translateY, coffee.id, removeCoffee, isActive]);
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -69,7 +55,7 @@ export const Coffee: React.FC<Props> = ({ coffee }) => {
         { translateX: coffee.lane * ACTUAL_LANE_WIDTH },
       ],
       // Optional: shrink or fade out when collected
-      opacity: hasCollected.value ? 0 : 1,
+      opacity: isActive.value ? 1 : 0,
     };
   });
 

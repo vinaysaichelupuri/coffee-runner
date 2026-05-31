@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring, runOnJS } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring, runOnJS, useAnimatedReaction } from 'react-native-reanimated';
 import { usePlayerStore } from '../store/usePlayerStore';
 import { useSwipeGesture } from '../hooks/useSwipeGesture';
+import { playerFractionalLane } from '../utils/globalShared';
 
 export const Player = () => {
   const { currentLane, moveLeft, moveRight, setIsMoving } = usePlayerStore();
@@ -27,6 +28,14 @@ export const Player = () => {
       }
     });
   }, [currentLane, translateX, setIsMoving, targetPosition]);
+
+  useAnimatedReaction(
+    () => translateX.value,
+    (x) => {
+      // Convert pixel position back to fractional lane (-1, 0, 1)
+      playerFractionalLane.value = x / 100;
+    }
+  );
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
