@@ -2,6 +2,7 @@ import { useFrameCallback, useSharedValue, runOnJS } from 'react-native-reanimat
 import { useGameStore } from '../store/useGameStore';
 import { getRandomLane, generateId } from '../utils/spawner';
 import { isColliding, BoundingBox } from '../utils/collision';
+import { playCoffee, playCrash } from './useAudio';
 import { playerFractionalLane } from '../utils/globalShared';
 import { Lane } from '../constants/gameConstants';
 import { Dimensions } from 'react-native';
@@ -34,8 +35,13 @@ const cleanupEntityOnJS = (type: 'coffee' | 'obstacle', id: string) => {
 };
 
 const handleCollisionOnJS = (type: 'coffee' | 'obstacle', id: string) => {
-  if (type === 'coffee') useGameStore.getState().handleCoffeeCollision(id);
-  else useGameStore.getState().handleObstacleCollision(id);
+  if (type === 'coffee') {
+    useGameStore.getState().handleCoffeeCollision(id);
+    playCoffee();
+  } else {
+    useGameStore.getState().handleObstacleCollision(id);
+    playCrash();
+  }
 };
 
 export const useGameLoop = () => {
