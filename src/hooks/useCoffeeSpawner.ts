@@ -33,6 +33,7 @@ export const useCoffeeSpawner = () => {
           id: generateId(),
           lane: randomLane,
           active: true,
+          spawnDistance: 0,
         };
 
         addCoffee(newCoffee);

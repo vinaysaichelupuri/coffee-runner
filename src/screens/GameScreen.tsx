@@ -4,14 +4,14 @@ import { useGameStore } from '../store/useGameStore';
 import { Player } from '../components/Player';
 import { Obstacle } from '../components/Obstacle';
 import { Coffee } from '../components/Coffee';
-import { useObstacleSpawner } from '../hooks/useObstacleSpawner';
-import { useCoffeeSpawner } from '../hooks/useCoffeeSpawner';
+import { useGameLoop } from '../hooks/useGameLoop';
+import { useDifficulty } from '../hooks/useDifficulty';
 
 export const GameScreen = () => {
   const { status, setStatus, obstacles, coffees, score } = useGameStore();
   
-  useObstacleSpawner();
-  useCoffeeSpawner();
+  const { globalDistance } = useGameLoop();
+  useDifficulty();
 
   useEffect(() => {
     // For testing/starting the game
@@ -24,10 +24,10 @@ export const GameScreen = () => {
     <View style={styles.container}>
       <Text style={styles.score}>Score: {score}</Text>
       {coffees.map(coffee => (
-        <Coffee key={coffee.id} coffee={coffee} />
+        <Coffee key={coffee.id} coffee={coffee} globalDistance={globalDistance} />
       ))}
       {obstacles.map(obs => (
-        <Obstacle key={obs.id} obstacle={obs} />
+        <Obstacle key={obs.id} obstacle={obs} globalDistance={globalDistance} />
       ))}
       <Player />
     </View>
