@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { useGameStore } from '../store/useGameStore';
+import { GameStatus, useGameStore } from '../store/useGameStore';
 import { Player } from '../components/Player';
 import { Obstacle } from '../components/Obstacle';
 import { Coffee } from '../components/Coffee';
+import { Background } from '../components/Background';
+import { HomeOverlay } from '../components/HomeOverlay';
+import { GameOverOverlay } from '../components/GameOverOverlay';
 import { useGameLoop } from '../hooks/useGameLoop';
 import { useDifficulty } from '../hooks/useDifficulty';
 
@@ -13,15 +16,11 @@ export const GameScreen = () => {
   const { globalDistance } = useGameLoop();
   useDifficulty();
 
-  useEffect(() => {
-    // For testing/starting the game
-    if (status === 'idle') {
-      setStatus('playing');
-    }
-  }, [status, setStatus]);
-
   return (
     <View style={styles.container}>
+      <Background globalDistance={globalDistance} />
+      {status === 'idle' && <HomeOverlay />}
+      {status === 'game_over' && <GameOverOverlay />}
       <Text style={styles.score}>Score: {score}</Text>
       {coffees.map(coffee => (
         <Coffee key={coffee.id} coffee={coffee} globalDistance={globalDistance} />
